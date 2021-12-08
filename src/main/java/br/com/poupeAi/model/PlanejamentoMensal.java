@@ -1,4 +1,4 @@
-package br.com.poupeAi.domain;
+package br.com.poupeAi.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
