@@ -23,8 +23,8 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handlerResourceNotFoundException(ResourceNotFoundException rnfException){
-        ErrorDetail rnfDetails = ErrorDetail
-                .builder()
+        ErrorDetail rnfDetails = ErrorDetail.ErrorDetailBuilder
+                .newBuilder()
                 .timestamp(new Date().getTime())
                 .status(HttpStatus.NOT_FOUND.value())
                 .title("Resource not found")
@@ -37,8 +37,8 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(NegocioException.class)
     public ResponseEntity<?> handlerNegocioException(NegocioException rnfException){
-        ErrorDetail rnfDetails = ErrorDetail
-                .builder()
+        ErrorDetail rnfDetails = ErrorDetail.ErrorDetailBuilder
+                .newBuilder()
                 .timestamp(new Date().getTime())
                 .status(HttpStatus.CONFLICT.value())
                 .title("Business rule error")
@@ -54,8 +54,8 @@ public class RestExceptionHandler {
         List<FieldError> fieldErrors = manveException.getBindingResult().getFieldErrors();
         String fields = fieldErrors.stream().map(FieldError::getField).collect(joining(","));
         String fieldMessages = fieldErrors.stream().map(FieldError::getDefaultMessage).collect(joining(","));
-        ValidationErrorDetails rnfDetails = ValidationErrorDetails
-                .builder()
+        ValidationErrorDetails rnfDetails = ValidationErrorDetails.Builder
+                .newBuilder()
                 .timestamp(new Date().getTime())
                 .status(HttpStatus.NOT_FOUND.value())
                 .title("Field Validation Error")
