@@ -15,6 +15,8 @@ import java.util.List;
 public class Envelope extends AbstractEntity{
     private String nome;
     private double orcamento;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private PlanejamentoMensal planejamentoMensal;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Despesa> despesas;
 }
