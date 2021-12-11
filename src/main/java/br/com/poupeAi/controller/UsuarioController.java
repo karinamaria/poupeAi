@@ -24,7 +24,6 @@ public class UsuarioController {
 
     @PostMapping
     public Usuario criarUsuario(@Valid @RequestBody Usuario usuario) throws NegocioException {
-        System.out.println("Post: " + usuario.getEmail());
         return this.usuarioService.salvar(usuario);
     }
 
