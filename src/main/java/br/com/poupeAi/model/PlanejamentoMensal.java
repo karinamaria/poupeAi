@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "planejamento_mensal")
@@ -13,8 +14,10 @@ import javax.persistence.*;
 @NoArgsConstructor @EqualsAndHashCode
 public class PlanejamentoMensal extends AbstractEntity{
     private int frequenciaEnvioRelatorio;
-    private int mês;
+    private int mes;
     private int ano;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Usuario usuario;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Envelope> envelopes;
 }
