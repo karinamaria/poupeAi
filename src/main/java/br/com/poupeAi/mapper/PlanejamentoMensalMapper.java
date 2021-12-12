@@ -6,10 +6,11 @@ import br.com.poupeAi.model.PlanejamentoMensal;
 import org.mapstruct.Mapper;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface PlanejamentoMensalMapper {
     PlanejamentoMensal planejamentoMensalDtoToPlanejamento(PlanejamentoMensalInputDto planejamentoMensalInputDto);
     PlanejamentoMensalOutputDto planejamentoToPlanejamentoOutput(PlanejamentoMensal planejamentoMensal);
-    List<PlanejamentoMensalOutputDto> convertList(List<PlanejamentoMensal> planejamentoMensalList);
+    Set<PlanejamentoMensalOutputDto> convertListPlanejamento(Set<PlanejamentoMensal> planejamentoMensalList);
 }

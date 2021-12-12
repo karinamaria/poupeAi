@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Hidden
 public class Despesa extends AbstractEntity{
     private double quantia;
-    private boolean ehParaOutroEnvelope;
+    private boolean ehParaOutroEnvelope = false;
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     private Envelope envelope;

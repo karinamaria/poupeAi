@@ -3,26 +3,24 @@ package br.com.poupeAi.model;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "envelope")
-@Getter @Setter @EqualsAndHashCode
+@Getter @Setter
+@NoArgsConstructor @EqualsAndHashCode(exclude = {"nome", "orcamento", "despesas"})
 @Hidden
 public class Envelope extends AbstractEntity{
     private String nome;
     private double orcamento;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Despesa> despesas;
-
-    public Envelope(){
-        this.despesas = new ArrayList<>();
-    }
+    private Set<Despesa> despesas = new HashSet<>();;
 }

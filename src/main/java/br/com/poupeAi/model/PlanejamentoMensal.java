@@ -3,15 +3,19 @@ package br.com.poupeAi.model;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "planejamento_mensal")
-@Getter @Setter @EqualsAndHashCode
+@Getter @Setter
+@NoArgsConstructor @EqualsAndHashCode
 @Hidden
 public class PlanejamentoMensal extends AbstractEntity{
     private int frequenciaEnvioRelatorio;
@@ -19,10 +23,6 @@ public class PlanejamentoMensal extends AbstractEntity{
     private int ano;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Usuario usuario;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Envelope> envelopes;
-
-    public PlanejamentoMensal(){
-        this.envelopes=new ArrayList<>();
-    }
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Envelope> envelopes  = new HashSet<>();
 }

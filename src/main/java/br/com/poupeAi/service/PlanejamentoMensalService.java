@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -62,7 +63,6 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
         return this.repository.save(planejamentoMensal);
     }
 
-    @Transactional
     public PlanejamentoMensal atualizarEnvelope(Long idPlanejamento,
                                   Envelope envelope) {
         PlanejamentoMensal planejamentoMensal = this.buscarPorId(idPlanejamento);
@@ -80,12 +80,14 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
 
        envelope.setId(envelopeBase.get().getId());
 
-       planejamentoMensal.getEnvelopes().add(envelope);
-
+        if(!planejamentoMensal.getEnvelopes().add(envelope)) {
+            planejamentoMensal.getEnvelopes().remove(envelopeBase.get());
+            planejamentoMensal.getEnvelopes().add(envelope);
+        }
        return this.repository.save(planejamentoMensal);
     }
 
-    public List<PlanejamentoMensal> buscarPorUsuario(){
+    public Set<PlanejamentoMensal> buscarPorUsuario(){
         return this.repository.findByUsuario(usuarioHelper.getUsuarioLogado());
     }
 

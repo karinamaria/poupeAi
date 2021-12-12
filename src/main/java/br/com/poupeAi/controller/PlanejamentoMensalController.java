@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 @Schema(name="Planejamento Mensal Controller")
 @AllArgsConstructor
@@ -46,8 +47,8 @@ public class PlanejamentoMensalController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Listar todos os planejamentos do usuário logado")
-    public List<PlanejamentoMensalOutputDto> listarPlanejamentos(){
-        return mapper.convertList(planejamentoService.buscarPorUsuario());
+    public Set<PlanejamentoMensalOutputDto> listarPlanejamentos(){
+        return mapper.convertListPlanejamento(planejamentoService.buscarPorUsuario());
     }
 
 
