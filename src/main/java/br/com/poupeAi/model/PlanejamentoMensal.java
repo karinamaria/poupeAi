@@ -3,7 +3,6 @@ package br.com.poupeAi.model;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;

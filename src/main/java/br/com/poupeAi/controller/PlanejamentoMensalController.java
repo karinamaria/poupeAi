@@ -1,6 +1,7 @@
 package br.com.poupeAi.controller;
 
 import br.com.poupeAi.dto.EnvelopeInputDto;
+import br.com.poupeAi.dto.EnvelopeInputUpdateDto;
 import br.com.poupeAi.dto.PlanejamentoMensalInputDto;
 import br.com.poupeAi.dto.PlanejamentoMensalOutputDto;
 import br.com.poupeAi.exception.NegocioException;
@@ -42,11 +43,6 @@ public class PlanejamentoMensalController {
         return mapper.planejamentoToPlanejamentoOutput(planejamentoService.salvar(planejamentoMensal));
     }
 
-    @DeleteMapping("/{id}")
-    public void excluirPlanejamento(){
-
-    }
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Listar todos os planejamentos do usuário logado")
@@ -72,14 +68,16 @@ public class PlanejamentoMensalController {
                 planejamentoService.adicionarEnvelope(idPlanejamento, envelopeMapper.envelopeInputToEnvelope(envelope)));
     }
 
-    @PatchMapping("/{idPlanejamento}/envelopes/{idEnvelope}")
+    @PatchMapping("/{idPlanejamento}/envelopes")
     @Operation(summary = "Atualizar envelope do planejamento")
     public PlanejamentoMensalOutputDto atualizarEnvelope(@PathVariable Long idPlanejamento,
-                                                @Valid @RequestBody EnvelopeInputDto envelope){
-        return new PlanejamentoMensalOutputDto();
+                                                         @Valid @RequestBody EnvelopeInputUpdateDto envelope){
+        return mapper.planejamentoToPlanejamentoOutput(
+                planejamentoService.atualizarEnvelope(idPlanejamento, envelopeMapper.envelopeUpdateToEnvelope(envelope))
+        );
     }
 
-    @DeleteMapping("/{idPlanejamento}/envelopes/{idEnvelope}")
+    @DeleteMapping("/{idPlanejamento}/envelopes")
     @Operation(summary = "Remover envelope do planejamento")
     public PlanejamentoMensalOutputDto removerEnvelope(@PathVariable Long idPlanejamento,
                                               @Valid @RequestBody EnvelopeInputDto envelope){

@@ -19,7 +19,7 @@ import java.util.List;
 public class Envelope extends AbstractEntity{
     private String nome;
     private double orcamento;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Despesa> despesas;
 
     public Envelope(){

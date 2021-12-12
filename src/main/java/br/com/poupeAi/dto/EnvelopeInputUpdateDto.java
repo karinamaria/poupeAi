@@ -9,10 +9,13 @@ import lombok.Setter;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
-@Schema(name="EnvelopeInputDto")
+@Schema(name="EnvelopeInputUpdateDto")
 @Getter @Setter
 @NoArgsConstructor @EqualsAndHashCode
-public class EnvelopeInputDto {
+public class EnvelopeInputUpdateDto {
+    @NotNull
+    @PositiveOrZero
+    private int id;
     @NotNull
     private String nome;
     @NotNull
