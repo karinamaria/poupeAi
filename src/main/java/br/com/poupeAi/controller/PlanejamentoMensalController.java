@@ -12,14 +12,11 @@ import br.com.poupeAi.model.PlanejamentoMensal;
 import br.com.poupeAi.service.PlanejamentoMensalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Set;
 
 @Schema(name="Planejamento Mensal Controller")
@@ -35,9 +32,6 @@ public class PlanejamentoMensalController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Cadastrar um novo planejamento")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode="201", description = "Planejamento criado")
-    })
     public PlanejamentoMensalOutputDto criarPlanejamento(
             @Valid @RequestBody PlanejamentoMensalInputDto planejamentoMensalInputDto) throws NegocioException {
         PlanejamentoMensal planejamentoMensal = mapper.planejamentoMensalDtoToPlanejamento(planejamentoMensalInputDto);
@@ -70,6 +64,7 @@ public class PlanejamentoMensalController {
     }
 
     @PatchMapping("/{idPlanejamento}/envelopes")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Atualizar envelope do planejamento")
     public PlanejamentoMensalOutputDto atualizarEnvelope(@PathVariable Long idPlanejamento,
                                                          @Valid @RequestBody EnvelopeInputUpdateDto envelope){
@@ -78,10 +73,11 @@ public class PlanejamentoMensalController {
         );
     }
 
-    @DeleteMapping("/{idPlanejamento}/envelopes")
+    @DeleteMapping("/{idPlanejamento}/envelopes/{idEnvelope}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Remover envelope do planejamento")
-    public PlanejamentoMensalOutputDto removerEnvelope(@PathVariable Long idPlanejamento,
-                                              @Valid @RequestBody EnvelopeInputDto envelope){
-        return new PlanejamentoMensalOutputDto();
+    public void removerEnvelope(@PathVariable Long idPlanejamento,
+                                @PathVariable Long idEnvelope){
+        planejamentoService.deletarEnvelopeDoPlanejamento(idPlanejamento, idEnvelope);
     }
 }

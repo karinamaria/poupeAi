@@ -64,24 +64,17 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
     }
 
     public PlanejamentoMensal atualizarEnvelope(Long idPlanejamento,
-                                  Envelope envelope) {
+                                                Envelope envelope) {
         PlanejamentoMensal planejamentoMensal = this.buscarPorId(idPlanejamento);
 
         ehPlanejamentoDeOutroUsuario(planejamentoMensal);
 
-        Optional<Envelope> envelopeBase = planejamentoMensal.getEnvelopes()
-                .stream()
-                .filter(envelope1 -> envelope1.getId().equals(envelope.getId()))
-                .findFirst();
-        if(!envelopeBase.isPresent()){
-            throw new NegocioException("Envelope não encontrado no planejamento id: "+planejamentoMensal.getId());
-        }
-        verificarDespesas(envelopeBase.get(), envelope);
-
-       envelope.setId(envelopeBase.get().getId());
+        Envelope envelopeBase = buscarEnvelopeNoPlanejamento(planejamentoMensal, envelope.getId());
+        verificarDespesas(envelopeBase, envelope);
+        envelope.setId(envelopeBase.getId());
 
         if(!planejamentoMensal.getEnvelopes().add(envelope)) {
-            planejamentoMensal.getEnvelopes().remove(envelopeBase.get());
+            planejamentoMensal.getEnvelopes().remove(envelopeBase);
             planejamentoMensal.getEnvelopes().add(envelope);
         }
        return this.repository.save(planejamentoMensal);
@@ -95,8 +88,36 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
         return planejamentoMensal;
     }
 
+    public void deletarEnvelopeDoPlanejamento(Long idPlanejamento,
+                                             Long idEnvelope){
+        PlanejamentoMensal planejamentoMensal = this.buscarPorId(idPlanejamento);
+        ehPlanejamentoDeOutroUsuario(planejamentoMensal);
+
+        Envelope envelope = buscarEnvelopeNoPlanejamento(planejamentoMensal, idEnvelope);
+
+        if(!envelope.getDespesas().isEmpty()){
+            throw new NegocioException("Não é possivel remover o envelope, pois ele já tem despesas");
+        }
+
+        planejamentoMensal.getEnvelopes().remove(envelope);
+
+        this.repository.save(planejamentoMensal);
+    }
+
     public Set<PlanejamentoMensal> buscarPorUsuario(){
         return this.repository.findByUsuario(usuarioHelper.getUsuarioLogado());
+    }
+
+    private Envelope buscarEnvelopeNoPlanejamento(PlanejamentoMensal planejamentoMensal,
+                                                  Long idEnvelope){
+        Optional<Envelope> envelopeBase = planejamentoMensal.getEnvelopes()
+                .stream()
+                .filter(envelope1 -> envelope1.getId().equals(idEnvelope))
+                .findFirst();
+        if(!envelopeBase.isPresent()){
+            throw new NegocioException("Envelope não encontrado no planejamento id: "+planejamentoMensal.getId());
+        }
+        return envelopeBase.get();
     }
 
     private void verificarDespesas(Envelope envelopeBase, Envelope envelopeAtualizado){
