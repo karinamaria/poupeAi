@@ -1,5 +1,6 @@
 package br.com.poupeAi.service;
 
+import br.com.poupeAi.exception.NegocioException;
 import br.com.poupeAi.helper.UsuarioHelper;
 import br.com.poupeAi.model.Envelope;
 import br.com.poupeAi.model.PlanejamentoMensal;

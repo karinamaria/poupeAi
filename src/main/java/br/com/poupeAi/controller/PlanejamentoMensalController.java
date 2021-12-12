@@ -3,11 +3,16 @@ package br.com.poupeAi.controller;
 import br.com.poupeAi.dto.EnvelopeInputDto;
 import br.com.poupeAi.dto.PlanejamentoMensalInputDto;
 import br.com.poupeAi.dto.PlanejamentoMensalOutputDto;
+import br.com.poupeAi.exception.NegocioException;
+import br.com.poupeAi.exception.ResourceNotFoundException;
 import br.com.poupeAi.mapper.EnvelopeMapper;
 import br.com.poupeAi.mapper.PlanejamentoMensalMapper;
 import br.com.poupeAi.model.PlanejamentoMensal;
 import br.com.poupeAi.service.PlanejamentoMensalService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -44,34 +49,40 @@ public class PlanejamentoMensalController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Listar todos os planejamentos do usuário logado")
     public List<PlanejamentoMensalOutputDto> listarPlanejamentos(){
         return mapper.convertList(planejamentoService.buscarPorUsuario());
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/{idPlanejamento}")
     @ResponseStatus(HttpStatus.OK)
-    public PlanejamentoMensalOutputDto buscarPlanejamento(@PathVariable Long idPlanejamento) throws ResourceNotFoundException{
+    @Operation(summary = "Buscar planejamento pelo ID")
+    public PlanejamentoMensalOutputDto buscarPlanejamento(@PathVariable Long idPlanejamento) throws ResourceNotFoundException {
         return mapper.planejamentoToPlanejamentoOutput(planejamentoService.buscarPorId(idPlanejamento));
     }
 
     @PostMapping("/{idPlanejamento}/envelopes")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Adicionar envelope ao planejamento")
     public PlanejamentoMensalOutputDto addEnvelope(@PathVariable Long idPlanejamento,
-                                          @Valid @ResponseBody EnvelopeInputDto envelope){
+                                                   @Valid @RequestBody EnvelopeInputDto envelope){
 
         return mapper.planejamentoToPlanejamentoOutput(
                 planejamentoService.adicionarEnvelope(idPlanejamento, envelopeMapper.envelopeInputToEnvelope(envelope)));
     }
 
     @PatchMapping("/{idPlanejamento}/envelopes/{idEnvelope}")
-    public PlanejamentoMensal atualizarEnvelope(@PathVariable Long idPlanejamento,
-                                                @PathVariable Long idEnvelope){
-        return new PlanejamentoMensal();
+    @Operation(summary = "Atualizar envelope do planejamento")
+    public PlanejamentoMensalOutputDto atualizarEnvelope(@PathVariable Long idPlanejamento,
+                                                @Valid @RequestBody EnvelopeInputDto envelope){
+        return new PlanejamentoMensalOutputDto();
     }
 
     @DeleteMapping("/{idPlanejamento}/envelopes/{idEnvelope}")
-    public PlanejamentoMensal removerEnvelope(@PathVariable Long idPlanejamento,
-                                              @PathVariable Long idEnvelope){
-        return new PlanejamentoMensal();
+    @Operation(summary = "Remover envelope do planejamento")
+    public PlanejamentoMensalOutputDto removerEnvelope(@PathVariable Long idPlanejamento,
+                                              @Valid @RequestBody EnvelopeInputDto envelope){
+        return new PlanejamentoMensalOutputDto();
     }
 }

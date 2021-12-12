@@ -1,5 +1,6 @@
 package br.com.poupeAi.model;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "planejamento_mensal")
 @Getter @Setter @EqualsAndHashCode
+@Hidden
 public class PlanejamentoMensal extends AbstractEntity{
     private int frequenciaEnvioRelatorio;
     private int mes;
