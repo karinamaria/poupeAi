@@ -1,5 +1,6 @@
 package br.com.poupeAi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import javax.persistence.*;
 public class Despesa extends AbstractEntity{
     private double quantia;
     private boolean ehParaOutroEnvelope;
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     private Envelope envelope;
 }

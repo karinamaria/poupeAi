@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "planejamento_mensal")
-@Getter @Setter
-@NoArgsConstructor @EqualsAndHashCode
+@Getter @Setter @EqualsAndHashCode
 public class PlanejamentoMensal extends AbstractEntity{
     private int frequenciaEnvioRelatorio;
     private int mes;
@@ -20,4 +20,8 @@ public class PlanejamentoMensal extends AbstractEntity{
     private Usuario usuario;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Envelope> envelopes;
+
+    public PlanejamentoMensal(){
+        this.envelopes=new ArrayList<>();
+    }
 }
