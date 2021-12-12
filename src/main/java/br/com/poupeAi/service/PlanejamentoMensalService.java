@@ -87,6 +87,14 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
        return this.repository.save(planejamentoMensal);
     }
 
+    public PlanejamentoMensal buscarPlanejamentoPeloId(Long idPlanejamento){
+        PlanejamentoMensal planejamentoMensal = this.buscarPorId(idPlanejamento);
+
+        ehPlanejamentoDeOutroUsuario(planejamentoMensal);
+
+        return planejamentoMensal;
+    }
+
     public Set<PlanejamentoMensal> buscarPorUsuario(){
         return this.repository.findByUsuario(usuarioHelper.getUsuarioLogado());
     }

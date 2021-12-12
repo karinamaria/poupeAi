@@ -56,7 +56,7 @@ public class PlanejamentoMensalController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Buscar planejamento pelo ID")
     public PlanejamentoMensalOutputDto buscarPlanejamento(@PathVariable Long idPlanejamento) throws ResourceNotFoundException {
-        return mapper.planejamentoToPlanejamentoOutput(planejamentoService.buscarPorId(idPlanejamento));
+        return mapper.planejamentoToPlanejamentoOutput(planejamentoService.buscarPlanejamentoPeloId(idPlanejamento));
     }
 
     @PostMapping("/{idPlanejamento}/envelopes")
