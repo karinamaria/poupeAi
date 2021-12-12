@@ -4,6 +4,7 @@ import br.com.poupeAi.exception.NegocioException;
 import br.com.poupeAi.model.Usuario;
 import br.com.poupeAi.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -21,6 +22,14 @@ public class UsuarioService extends GenericService<Usuario, UsuarioRepository>  
         Usuario usuarioEncontrado = this.buscarPorEmail(usuario);
         if(Objects.nonNull(usuarioEncontrado) && !usuarioEncontrado.getId().equals(usuario.getId()))
             throw new NegocioException("Este endereço de e-mail já está em uso.");
+    }
+
+    @Override
+    public Usuario salvar(Usuario usuario) throws NegocioException {
+        // Criptografar a senha do usuário
+        usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
+
+        return super.salvar(usuario);
     }
 
     public Usuario buscarPorEmail(Usuario usuario) {
