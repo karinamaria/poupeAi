@@ -7,8 +7,6 @@ import br.com.poupeAi.model.Usuario;
 import br.com.poupeAi.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -35,10 +33,6 @@ public class UsuarioController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Buscar um usuário cadastrado")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode="200", description = "Retorna o usuário encontrado"),
-            @ApiResponse(responseCode="404", description = "Usuário não encontrado no banco de dados")
-    })
     public Usuario buscarUsuario(@PathVariable Long id) throws ResourceNotFoundException {
         return this.usuarioService.buscarPorId(id);
     }
