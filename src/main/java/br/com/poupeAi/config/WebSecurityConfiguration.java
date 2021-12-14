@@ -20,6 +20,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/swagger-ui/**",
             "/swagger-ui.html",
     };
+    private static final String CADASTRAR_USUARIO = "/api/v1/usuarios";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -27,6 +28,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers(SWAGGER).permitAll()
+                .antMatchers(CADASTRAR_USUARIO).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

@@ -1,50 +1,57 @@
 package br.com.poupeAi.controller;
 
 
+import br.com.poupeAi.dto.UsuarioInputDto;
+import br.com.poupeAi.dto.UsuarioOutputDto;
 import br.com.poupeAi.exception.NegocioException;
 import br.com.poupeAi.exception.ResourceNotFoundException;
+import br.com.poupeAi.mapper.UsuarioMapper;
 import br.com.poupeAi.model.Usuario;
 import br.com.poupeAi.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @Schema(name="Usuário Controller")
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/usuarios")
 public class UsuarioController {
     private final UsuarioService usuarioService;
-
-    @Autowired
-    public UsuarioController(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
-    }
+    private final UsuarioMapper usuarioMapper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Usuario criarUsuario(@Valid @RequestBody Usuario usuario) throws NegocioException {
-        return this.usuarioService.salvar(usuario);
+    @Operation(summary = "Cadastrar um novo usuário")
+    public UsuarioOutputDto criarUsuario(@Valid @RequestBody UsuarioInputDto usuarioInputDto) throws NegocioException {
+        Usuario usuario = usuarioMapper.usuarioInputDtoToUsuario(usuarioInputDto);
+        return usuarioMapper.usuarioToUsuarioOutputDto(usuarioService.salvar(usuario));
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Buscar um usuário cadastrado")
-    public Usuario buscarUsuario(@PathVariable Long id) throws ResourceNotFoundException {
-        return this.usuarioService.buscarPorId(id);
+    public UsuarioOutputDto buscarUsuario(@PathVariable Long id) throws ResourceNotFoundException {
+        return usuarioMapper.usuarioToUsuarioOutputDto(usuarioService.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Usuario atualizarUsuario(@Valid @RequestBody Usuario usuario) throws NegocioException, ResourceNotFoundException {
-        return this.usuarioService.atualizar(usuario);
+    @Operation(summary = "Atualizar um usuário cadastrado")
+    public UsuarioOutputDto atualizarUsuario(@PathVariable Long id, @Valid @RequestBody UsuarioInputDto usuarioInputDto)
+            throws NegocioException, ResourceNotFoundException {
+        Usuario usuario = usuarioMapper.usuarioInputDtoToUsuario(usuarioInputDto);
+        usuario.setId(id);
+        return usuarioMapper.usuarioToUsuarioOutputDto(usuarioService.atualizar(usuario));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Remover um usuário cadastrado")
     public void removerUsuarioPorId(@PathVariable Long id) throws NegocioException, ResourceNotFoundException {
        this.usuarioService.remover(id);
     }
