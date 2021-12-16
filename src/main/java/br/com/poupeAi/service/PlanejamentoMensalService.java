@@ -7,17 +7,11 @@ import br.com.poupeAi.model.Envelope;
 import br.com.poupeAi.model.PlanejamentoMensal;
 import br.com.poupeAi.model.Usuario;
 import br.com.poupeAi.repository.PlanejamentoMensalRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal, PlanejamentoMensalRepository> {
@@ -105,7 +99,7 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
     }
 
     public Set<PlanejamentoMensal> buscarPorUsuario(){
-        return this.repository.findByUsuario(usuarioHelper.getUsuarioLogado());
+        return this.repository.findByUsuarioOrderByAnoDesc(usuarioHelper.getUsuarioLogado());
     }
 
     private Envelope buscarEnvelopeNoPlanejamento(PlanejamentoMensal planejamentoMensal,

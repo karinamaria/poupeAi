@@ -21,7 +21,7 @@ public class PlanejamentoMensal extends AbstractEntity{
     private int frequenciaEnvioRelatorio;
     private int mes;
     private int ano;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne
     private Usuario usuario;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Envelope> envelopes  = new HashSet<>();
