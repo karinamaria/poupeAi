@@ -60,14 +60,19 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
     }
 
     public PlanejamentoMensal atualizarEnvelope(Long idPlanejamento,
-                                                Envelope envelope) {
+                                                Long idEnvelope,
+                                                double orcamento) {
         PlanejamentoMensal planejamentoMensal = this.buscarPorId(idPlanejamento);
 
         ehPlanejamentoDeOutroUsuario(planejamentoMensal);
 
-        Envelope envelopeBase = buscarEnvelopeNoPlanejamento(planejamentoMensal, envelope.getId());
-        verificarDespesas(envelopeBase, envelope);
+        Envelope envelopeBase = buscarEnvelopeNoPlanejamento(planejamentoMensal, idEnvelope);
+        verificarDespesas(envelopeBase, orcamento);
+
+        Envelope envelope = new Envelope();
         envelope.setId(envelopeBase.getId());
+        envelope.setNome(envelopeBase.getNome());
+        envelope.setOrcamento(orcamento);
 
         if(!planejamentoMensal.getEnvelopes().add(envelope)) {
             planejamentoMensal.getEnvelopes().remove(envelopeBase);
@@ -116,12 +121,12 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
         return envelopeBase.get();
     }
 
-    private void verificarDespesas(Envelope envelopeBase, Envelope envelopeAtualizado){
+    private void verificarDespesas(Envelope envelopeBase, double novoOrcamento){
         double valorDespesasEnvelopeBase = envelopeBase.getDespesas()
                 .stream()
                 .mapToDouble(Despesa::getQuantia)
                 .sum();
-        if(envelopeAtualizado.getOrcamento() < valorDespesasEnvelopeBase){
+        if(novoOrcamento < valorDespesasEnvelopeBase){
             throw new NegocioException("O envelope já possui um total de despesas R$ "+valorDespesasEnvelopeBase);
         }
     }

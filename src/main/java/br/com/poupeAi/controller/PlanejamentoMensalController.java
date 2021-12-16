@@ -71,13 +71,14 @@ public class PlanejamentoMensalController {
                 planejamentoService.adicionarEnvelope(idPlanejamento, envelopeMapper.envelopeInputToEnvelope(envelope)));
     }
 
-    @PatchMapping("/{idPlanejamento}/envelopes")
+    @PatchMapping("/{idPlanejamento}/envelopes/{idEnvelope}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Atualizar envelope do planejamento")
     public PlanejamentoMensalOutputDto atualizarEnvelope(@PathVariable Long idPlanejamento,
-                                                         @Valid @RequestBody EnvelopeInputUpdateDto envelope){
+                                                         @PathVariable Long idEnvelope,
+                                                         @RequestParam(name = "orcamento") double orcamento){
         return mapper.planejamentoToPlanejamentoOutput(
-                planejamentoService.atualizarEnvelope(idPlanejamento, envelopeMapper.envelopeUpdateToEnvelope(envelope))
+                planejamentoService.atualizarEnvelope(idPlanejamento, idEnvelope, orcamento)
         );
     }
 
