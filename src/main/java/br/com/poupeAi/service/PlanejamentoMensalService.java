@@ -7,17 +7,13 @@ import br.com.poupeAi.model.Envelope;
 import br.com.poupeAi.model.PlanejamentoMensal;
 import br.com.poupeAi.model.Usuario;
 import br.com.poupeAi.repository.PlanejamentoMensalRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal, PlanejamentoMensalRepository> {
@@ -64,14 +60,19 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
     }
 
     public PlanejamentoMensal atualizarEnvelope(Long idPlanejamento,
-                                                Envelope envelope) {
+                                                Long idEnvelope,
+                                                double orcamento) {
         PlanejamentoMensal planejamentoMensal = this.buscarPorId(idPlanejamento);
 
         ehPlanejamentoDeOutroUsuario(planejamentoMensal);
 
-        Envelope envelopeBase = buscarEnvelopeNoPlanejamento(planejamentoMensal, envelope.getId());
-        verificarDespesas(envelopeBase, envelope);
+        Envelope envelopeBase = buscarEnvelopeNoPlanejamento(planejamentoMensal, idEnvelope);
+        verificarDespesas(envelopeBase, orcamento);
+
+        Envelope envelope = new Envelope();
         envelope.setId(envelopeBase.getId());
+        envelope.setNome(envelopeBase.getNome());
+        envelope.setOrcamento(orcamento);
 
         if(!planejamentoMensal.getEnvelopes().add(envelope)) {
             planejamentoMensal.getEnvelopes().remove(envelopeBase);
@@ -104,8 +105,8 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
         this.repository.save(planejamentoMensal);
     }
 
-    public Set<PlanejamentoMensal> buscarPorUsuario(){
-        return this.repository.findByUsuario(usuarioHelper.getUsuarioLogado());
+    public Page<PlanejamentoMensal> buscarPorUsuario(Pageable pageable){
+        return this.repository.findByUsuarioOrderByAnoDesc(pageable, usuarioHelper.getUsuarioLogado());
     }
 
     private Envelope buscarEnvelopeNoPlanejamento(PlanejamentoMensal planejamentoMensal,
@@ -120,12 +121,12 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
         return envelopeBase.get();
     }
 
-    private void verificarDespesas(Envelope envelopeBase, Envelope envelopeAtualizado){
+    private void verificarDespesas(Envelope envelopeBase, double novoOrcamento){
         double valorDespesasEnvelopeBase = envelopeBase.getDespesas()
                 .stream()
                 .mapToDouble(Despesa::getQuantia)
                 .sum();
-        if(envelopeAtualizado.getOrcamento() < valorDespesasEnvelopeBase){
+        if(novoOrcamento < valorDespesasEnvelopeBase){
             throw new NegocioException("O envelope já possui um total de despesas R$ "+valorDespesasEnvelopeBase);
         }
     }

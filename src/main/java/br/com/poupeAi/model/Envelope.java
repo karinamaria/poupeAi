@@ -16,7 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "envelope")
 @Getter @Setter
-@NoArgsConstructor @EqualsAndHashCode(exclude = {"nome", "orcamento", "despesas"})
+@NoArgsConstructor @EqualsAndHashCode(exclude = {"orcamento", "despesas"})
 @Hidden
 public class Envelope extends AbstractEntity{
     private String nome;
