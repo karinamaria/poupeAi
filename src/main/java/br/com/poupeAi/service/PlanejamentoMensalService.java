@@ -8,6 +8,8 @@ import br.com.poupeAi.model.PlanejamentoMensal;
 import br.com.poupeAi.model.Usuario;
 import br.com.poupeAi.repository.PlanejamentoMensalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -98,8 +100,8 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
         this.repository.save(planejamentoMensal);
     }
 
-    public Set<PlanejamentoMensal> buscarPorUsuario(){
-        return this.repository.findByUsuarioOrderByAnoDesc(usuarioHelper.getUsuarioLogado());
+    public Page<PlanejamentoMensal> buscarPorUsuario(Pageable pageable){
+        return this.repository.findByUsuarioOrderByAnoDesc(pageable, usuarioHelper.getUsuarioLogado());
     }
 
     private Envelope buscarEnvelopeNoPlanejamento(PlanejamentoMensal planejamentoMensal,

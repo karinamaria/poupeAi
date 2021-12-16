@@ -11,12 +11,18 @@ import br.com.poupeAi.mapper.PlanejamentoMensalMapper;
 import br.com.poupeAi.model.PlanejamentoMensal;
 import br.com.poupeAi.service.PlanejamentoMensalService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 
 @Schema(name="Planejamento Mensal Controller")
@@ -41,8 +47,10 @@ public class PlanejamentoMensalController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Listar todos os planejamentos do usuário logado")
-    public Set<PlanejamentoMensalOutputDto> listarPlanejamentos(){
-        return mapper.convertListPlanejamento(planejamentoService.buscarPorUsuario());
+    public Page<PlanejamentoMensalOutputDto> listarPlanejamentos(@Parameter(hidden = true) @PageableDefault Pageable pageable){
+        Page<PlanejamentoMensal> planejamentoMensal = planejamentoService.buscarPorUsuario(pageable);
+
+        return planejamentoMensal.map(planejamentoMensal1 -> mapper.planejamentoToPlanejamentoOutput(planejamentoMensal1));
     }
 
 
