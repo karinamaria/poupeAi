@@ -12,12 +12,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal, PlanejamentoMensalRepository> {
     private final UsuarioHelper usuarioHelper;
+
+    private static List<String> NAMES_DEFAULT_ENVELOPES = Arrays.asList(
+            "Carro","Casa","Saúde","Compras","Supermercado","Lazer","Educação","Dividas", "Reserva de Emergência", "Investimentos");
 
     @Autowired
     public PlanejamentoMensalService(PlanejamentoMensalRepository repository,
@@ -38,7 +40,21 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
             throw new NegocioException("O usuário já possui um planejamento para "
                     +planejamentoMensal.getMes()+"/"+planejamentoMensal.getAno());
         }
+
         planejamentoMensal.setUsuario(usuario);
+        adicionarEnvelopesPadrao(planejamentoMensal);
+    }
+
+    public void adicionarEnvelopesPadrao(PlanejamentoMensal planejamentoMensal){
+        Set<Envelope> envelopes = new HashSet<>();
+
+        for(String e : NAMES_DEFAULT_ENVELOPES){
+            Envelope envelope = new Envelope();
+            envelope.setNome(e);
+            envelope.setOrcamento(0f);
+            envelopes.add(envelope);
+        }
+        planejamentoMensal.setEnvelopes(envelopes);
     }
 
     public PlanejamentoMensal adicionarEnvelope(Long idPlanejamento,
