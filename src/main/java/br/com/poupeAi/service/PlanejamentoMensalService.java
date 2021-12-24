@@ -2,18 +2,14 @@ package br.com.poupeAi.service;
 
 import br.com.poupeAi.exception.NegocioException;
 import br.com.poupeAi.helper.UsuarioHelper;
-import br.com.poupeAi.model.Despesa;
-import br.com.poupeAi.model.Envelope;
-import br.com.poupeAi.model.PlanejamentoMensal;
-import br.com.poupeAi.model.Usuario;
+import br.com.poupeAi.model.*;
 import br.com.poupeAi.repository.PlanejamentoMensalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal, PlanejamentoMensalRepository> {
@@ -38,7 +34,9 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
             throw new NegocioException("O usuário já possui um planejamento para "
                     +planejamentoMensal.getMes()+"/"+planejamentoMensal.getAno());
         }
+
         planejamentoMensal.setUsuario(usuario);
+        adicionarEnvelopesPadrao(planejamentoMensal);
     }
 
     public PlanejamentoMensal adicionarEnvelope(Long idPlanejamento,
@@ -49,7 +47,7 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
 
         boolean usuarioJaPossuiEnvelope = planejamentoMensal.getEnvelopes()
                 .stream()
-                .anyMatch(env -> env.getNome().equals(envelope.getNome()));
+                .anyMatch(env -> env.getNome().equalsIgnoreCase(envelope.getNome()));
         if(usuarioJaPossuiEnvelope){
             throw new NegocioException("Usuário já possui o envelope");
         }
@@ -100,6 +98,11 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
             throw new NegocioException("Não é possivel remover o envelope, pois ele já tem despesas");
         }
 
+        if(envelope.getNome().equalsIgnoreCase(EnvelopeDefaultEnum.RESERVA_EMERGENCIA.getDescricao())
+            || envelope.getNome().equalsIgnoreCase(EnvelopeDefaultEnum.INVESTIMENTOS.getDescricao())){
+            throw new NegocioException("Não é possível remover os envelopes de reserva de emergência ou investimentos");
+        }
+
         planejamentoMensal.getEnvelopes().remove(envelope);
 
         this.repository.save(planejamentoMensal);
@@ -135,6 +138,19 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
         if(!planejamentoMensal.getUsuario().equals(usuarioHelper.getUsuarioLogado())){
             throw new NegocioException("Não é possível cadastrar o envelope");
         }
+    }
+
+    private void adicionarEnvelopesPadrao(PlanejamentoMensal planejamentoMensal){
+        Set<Envelope> envelopes = new HashSet<>();
+
+        for(EnvelopeDefaultEnum e: EnvelopeDefaultEnum.values()){
+            Envelope envelope = new Envelope();
+            envelope.setNome(e.getDescricao());
+            envelope.setOrcamento(0f);
+            envelopes.add(envelope);
+        }
+
+        planejamentoMensal.setEnvelopes(envelopes);
     }
 
 }
