@@ -1,10 +1,7 @@
 package br.com.poupeAi.model;
 
 import io.swagger.v3.oas.annotations.Hidden;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -22,5 +19,13 @@ public class Envelope extends AbstractEntity{
     private String nome;
     private double orcamento;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Despesa> despesas = new HashSet<>();;
+    private Set<Despesa> despesas = new HashSet<>();
+
+    @Builder
+    public Envelope(Long id, String nome, double orcamento, Set<Despesa> despesas) {
+        super(id);
+        this.nome = nome;
+        this.orcamento = orcamento;
+        this.despesas = despesas;
+    }
 }
