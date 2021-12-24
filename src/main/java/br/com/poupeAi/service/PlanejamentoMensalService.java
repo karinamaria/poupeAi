@@ -108,7 +108,7 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
         this.repository.save(planejamentoMensal);
     }
 
-    public Page<PlanejamentoMensal> buscarPorUsuario(Pageable pageable){
+    public Page<PlanejamentoMensal> buscarPlanejamentoPorUsuario(Pageable pageable){
         return this.repository.findByUsuarioOrderByAnoDesc(pageable, usuarioHelper.getUsuarioLogado());
     }
 
