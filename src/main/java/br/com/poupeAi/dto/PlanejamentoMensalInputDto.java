@@ -6,11 +6,10 @@ import lombok.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 @Schema(name="PlanejamentoMensalInputDto")
-@Getter @Setter
-@NoArgsConstructor @EqualsAndHashCode
+@Getter @Setter @Builder
+@NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode
 public class PlanejamentoMensalInputDto {
 //    @NotNull
 //    @Positive

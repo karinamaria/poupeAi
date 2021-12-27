@@ -2,8 +2,13 @@ package br.com.poupeAi.mother;
 
 import br.com.poupeAi.model.PlanejamentoMensal;
 
+import java.util.Collections;
+import java.util.HashSet;
+
+import static br.com.poupeAi.mother.EnvelopeMother.createAnExistingEnvelope;
 import static br.com.poupeAi.mother.EnvelopeMother.createDefaultEnvelopes;
 import static br.com.poupeAi.mother.UsuarioMother.createAValidUsuario;
+import static br.com.poupeAi.mother.UsuarioMother.getAnExistingUsuario;
 
 /**
  * PlanejamentoMensalMother é uma classe object mother
@@ -26,8 +31,28 @@ public class PlanejamentoMensalMother {
                 .id(1L)
                 .ano(MONTH)
                 .mes(YEAR)
-                .usuario(createAValidUsuario())
+                .usuario(getAnExistingUsuario())
                 .envelopes(createDefaultEnvelopes())
+                .build();
+    }
+
+    public static PlanejamentoMensal createPlanejamentoWithoutEnvelopes(){
+        return PlanejamentoMensal.builder()
+                .id(1L)
+                .ano(MONTH)
+                .mes(YEAR)
+                .usuario(getAnExistingUsuario())
+                .envelopes(new HashSet<>())
+                .build();
+    }
+
+    public static PlanejamentoMensal createPlanejamentoWithEnvelope(){
+        return PlanejamentoMensal.builder()
+                .id(1L)
+                .ano(MONTH)
+                .mes(YEAR)
+                .usuario(getAnExistingUsuario())
+                .envelopes(new HashSet<>(Collections.singleton(createAnExistingEnvelope())))
                 .build();
     }
 

@@ -135,7 +135,7 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
     }
 
     private void ehPlanejamentoDeOutroUsuario(PlanejamentoMensal planejamentoMensal){
-        if(!planejamentoMensal.getUsuario().equals(usuarioHelper.getUsuarioLogado())){
+        if(!planejamentoMensal.getUsuario().getId().equals(usuarioHelper.getUsuarioLogado().getId())){
             throw new NegocioException("Não é possível cadastrar o envelope");
         }
     }
