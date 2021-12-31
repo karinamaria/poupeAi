@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor @EqualsAndHashCode
 public class PlanejamentoMensalOutputDto {
     private Long id;
-    private int frequenciaEnvioRelatorio;
+//    private int frequenciaEnvioRelatorio;
     private int mes;
     private int ano;
     private UsuarioOutputDto usuario;

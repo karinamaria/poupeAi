@@ -4,13 +4,13 @@ import br.com.poupeAi.dto.PlanejamentoMensalInputDto;
 import br.com.poupeAi.dto.PlanejamentoMensalOutputDto;
 import br.com.poupeAi.model.PlanejamentoMensal;
 import org.mapstruct.Mapper;
-import org.springframework.data.domain.Page;
+import org.mapstruct.factory.Mappers;
 
-import java.util.List;
-import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface PlanejamentoMensalMapper {
+    PlanejamentoMensalMapper INSTANCE = Mappers.getMapper( PlanejamentoMensalMapper.class );
+
     PlanejamentoMensal planejamentoMensalDtoToPlanejamento(PlanejamentoMensalInputDto planejamentoMensalInputDto);
     PlanejamentoMensalOutputDto planejamentoToPlanejamentoOutput(PlanejamentoMensal planejamentoMensal);
 }

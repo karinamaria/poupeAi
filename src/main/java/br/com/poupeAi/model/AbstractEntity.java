@@ -12,14 +12,16 @@ import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 @MappedSuperclass
-@NoArgsConstructor
-@EqualsAndHashCode
+@NoArgsConstructor @EqualsAndHashCode
+@Getter @Setter
 public abstract class AbstractEntity  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter @Setter
     protected Long id;
 
-    @Getter @Setter
     protected boolean ativo = true;
+
+    public AbstractEntity(Long id) {
+        this.id = id;
+    }
 }
