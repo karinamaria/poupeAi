@@ -103,12 +103,6 @@
 			<version>${version.mapstruct-lombok}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-surefire-plugin</artifactId>
-			<version>${version.maven.surefire}</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -140,6 +134,11 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${version.maven.surefire}</version>
+    			</plugin>
 		</plugins>
 	</build>
 
