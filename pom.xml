@@ -20,7 +20,7 @@
 		<version.lombok>1.18.18</version.lombok>
 		<version.mapstruct>1.4.2.Final</version.mapstruct>
 		<version.mapstruct-lombok>0.2.0</version.mapstruct-lombok>
-		<version.maven.surefire>2.22.2</version.maven.surefire>
+		<version.maven.surefire>2.12</version.maven.surefire>
 	</properties>
 	<dependencies>
 		<dependency>
