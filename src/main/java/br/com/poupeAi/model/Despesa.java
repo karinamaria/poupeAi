@@ -25,4 +25,12 @@ public class Despesa extends AbstractEntity{
         this.ehParaOutroEnvelope = ehParaOutroEnvelope;
         this.envelope = envelope;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(super.equals(o) && o instanceof Despesa)
+            return o == this;
+
+        return false;
+    }
 }

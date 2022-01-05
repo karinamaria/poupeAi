@@ -112,7 +112,7 @@ public class PlanejamentoMensalService extends GenericService<PlanejamentoMensal
         return this.repository.findByUsuarioOrderByAnoDesc(pageable, usuarioHelper.getUsuarioLogado());
     }
 
-    private Envelope buscarEnvelopeNoPlanejamento(PlanejamentoMensal planejamentoMensal,
+    public Envelope buscarEnvelopeNoPlanejamento(PlanejamentoMensal planejamentoMensal,
                                                   Long idEnvelope){
         Optional<Envelope> envelopeBase = planejamentoMensal.getEnvelopes()
                 .stream()
