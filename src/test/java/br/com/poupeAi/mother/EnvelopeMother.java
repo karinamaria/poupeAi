@@ -3,6 +3,7 @@ package br.com.poupeAi.mother;
 import br.com.poupeAi.model.Envelope;
 import br.com.poupeAi.model.EnvelopeDefaultEnum;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +40,7 @@ public class EnvelopeMother {
                 .id(1L)
                 .nome("Teste 1")
                 .orcamento(1000)
-                .despesas(new HashSet<>(Collections.singleton(getExistingDespesa())))
+                .despesas(new ArrayList<>(Collections.singleton(getExistingDespesa())))
                 .build();
     }
 }
