@@ -7,9 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,10 +19,10 @@ public class Envelope extends AbstractEntity{
     private String nome;
     private double orcamento;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Despesa> despesas = new ArrayList<>();
+    private Set<Despesa> despesas = new HashSet<>();
 
     @Builder
-    public Envelope(Long id, String nome, double orcamento, List<Despesa> despesas) {
+    public Envelope(Long id, String nome, double orcamento, Set<Despesa> despesas) {
         super(id);
         this.nome = nome;
         this.orcamento = orcamento;

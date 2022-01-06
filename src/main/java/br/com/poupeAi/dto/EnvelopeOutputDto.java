@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Schema(name="EnvelopeOutputDto")
 @Getter @Setter
@@ -15,5 +15,5 @@ public class EnvelopeOutputDto {
     private Long id;
     private String nome;
     private double orcamento;
-    private List<DespesaOutputDto> despesas;
+    private Set<DespesaOutputDto> despesas;
 }
