@@ -23,13 +23,13 @@ public class DespesaService {
 
     public void validarDespesa(PlanejamentoMensal planejamento, Envelope envelope, Despesa despesa)
             throws NegocioException {
-        double saldoEnvelope = envelope.getOrcamento();
-        saldoEnvelope -= envelope.getDespesas()
+        double totalDespesasEnvelope = envelope.getDespesas()
                 .stream()
                 .filter(despesa1 -> !despesa1.getId().equals(despesa.getId()))
                 .mapToDouble(Despesa::getQuantia)
                 .sum();
 
+        double saldoEnvelope = envelope.getOrcamento() - totalDespesasEnvelope;
         if(saldoEnvelope < despesa.getQuantia())
             throw new NegocioException("Saldo insuficiente no envelope. Saldo: R$ " + saldoEnvelope);
 
