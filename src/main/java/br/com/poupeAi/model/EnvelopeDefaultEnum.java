@@ -9,6 +9,7 @@ public enum EnvelopeDefaultEnum {
     private String descricao;
 
     EnvelopeDefaultEnum(String descricao) {
+        this.descricao = descricao;
     }
 
     public String getDescricao() {
