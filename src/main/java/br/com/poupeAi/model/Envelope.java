@@ -3,10 +3,7 @@ package br.com.poupeAi.model;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,7 +15,7 @@ import java.util.Set;
 public class Envelope extends AbstractEntity{
     private String nome;
     private double orcamento;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch= FetchType.EAGER)
     private Set<Despesa> despesas = new HashSet<>();
 
     @Builder
