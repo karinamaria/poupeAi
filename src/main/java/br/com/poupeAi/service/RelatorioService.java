@@ -79,12 +79,12 @@ public class RelatorioService {
 
     private double calcularSaldoAcumuladoEnvelope(PlanejamentoMensal planejamento, String nomeEnvelope) {
         Long idUsuario = planejamento.getUsuario().getId();
-        double orcamentoAcumuladoReserva = usuarioRepository.orcamentoAcumuladoPorEnvelope(idUsuario, nomeEnvelope,
+        double orcamentoAcumulado = usuarioRepository.orcamentoAcumuladoPorEnvelope(idUsuario, nomeEnvelope,
                 planejamento.getMes(), planejamento.getAno());
-        double despesasAcumuladasReserva = usuarioRepository.despesasAcumuladasPorEnvelope(idUsuario, nomeEnvelope,
+        double despesasAcumuladas = usuarioRepository.despesasAcumuladasPorEnvelope(idUsuario, nomeEnvelope,
                 planejamento.getMes(), planejamento.getAno());
 
-        return orcamentoAcumuladoReserva - despesasAcumuladasReserva;
+        return orcamentoAcumulado - despesasAcumuladas;
     }
 
     private PdfPTable criarTabelaSaldoEnvelopes(PlanejamentoMensal planejamento, Map<String, Double> totalDespesas,
