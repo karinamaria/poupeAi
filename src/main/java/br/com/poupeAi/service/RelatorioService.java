@@ -2,10 +2,15 @@ package br.com.poupeAi.service;
 
 import br.com.poupeAi.model.Despesa;
 import br.com.poupeAi.model.Envelope;
+import br.com.poupeAi.model.EnvelopeDefaultEnum;
 import br.com.poupeAi.model.PlanejamentoMensal;
+import br.com.poupeAi.repository.UsuarioRepository;
 import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -17,6 +22,12 @@ public class RelatorioService {
     private static final NumberFormat FORMATO_QUANTIA = NumberFormat.getCurrencyInstance();
     private static final Font FONTE_TITULO = new Font(Font.FontFamily.HELVETICA, 15, Font.BOLD);
     private static final Font FONTE_CABECALHO_TABELA = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+    private final UsuarioRepository usuarioRepository;
+
+    @Autowired
+    public RelatorioService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 
     private void extrairDadosDoPlanejamento(PlanejamentoMensal planejamentoMensal, Map<String, Double> saldo,
                                             Map<String, Double> totalDespesas, Map<String, Double> totalEmprestado,
@@ -64,6 +75,16 @@ public class RelatorioService {
         }
         totalPlanejamento.put("orcamento", orcamentoDoPlanejamento);
         totalPlanejamento.put("saldo", saldoDoPlanejamento);
+    }
+
+    private double calcularSaldoAcumuladoEnvelope(PlanejamentoMensal planejamento, String nomeEnvelope) {
+        Long idUsuario = planejamento.getUsuario().getId();
+        double orcamentoAcumuladoReserva = usuarioRepository.orcamentoAcumuladoPorEnvelope(idUsuario, nomeEnvelope,
+                planejamento.getMes(), planejamento.getAno());
+        double despesasAcumuladasReserva = usuarioRepository.despesasAcumuladasPorEnvelope(idUsuario, nomeEnvelope,
+                planejamento.getMes(), planejamento.getAno());
+
+        return orcamentoAcumuladoReserva - despesasAcumuladasReserva;
     }
 
     private PdfPTable criarTabelaSaldoEnvelopes(PlanejamentoMensal planejamento, Map<String, Double> totalDespesas,
@@ -125,6 +146,7 @@ public class RelatorioService {
                 tabela.addCell(FORMATO_QUANTIA.format(totalRecebidoEmprestado.get(nomeEnvelope)));
             }
         }
+
         return tabela;
     }
 
@@ -162,12 +184,36 @@ public class RelatorioService {
             relatorio.add(tabelaSaldo);
             relatorio.add(new Paragraph("\n"));
 
-            // Adiciona tabelas com informações sobre empréstimos entre os envelopes ao relatório
-            PdfPTable tabelaEmprestado = criarTabelaEmprestadoEnvelopes(planejamento, totalEmprestado);
-            relatorio.add(tabelaEmprestado);
+            // Verifica se algum envelope recebeu dinheiro emprestado de outro
+            if(!totalRecebidoEmprestado.isEmpty()) {
+                // Se sim, adiciona tabelas com informações sobre os empréstimos entre os envelopes ao relatório
+                PdfPTable tabelaEmprestado = criarTabelaEmprestadoEnvelopes(planejamento, totalEmprestado);
+                relatorio.add(tabelaEmprestado);
+                relatorio.add(new Paragraph("\n"));
+                PdfPTable tabelaEmprestimos = criarTabelaEmprestimoEnvelopes(planejamento, totalRecebidoEmprestado);
+                relatorio.add(tabelaEmprestimos);
+            }
+            else {
+                relatorio.add(new Paragraph("*Nenhum empréstimo entre envelopes foi registrado."));
+            }
+
+            // Adiciona separador
             relatorio.add(new Paragraph("\n"));
-            PdfPTable tabelaEmprestimos = criarTabelaEmprestimoEnvelopes(planejamento, totalRecebidoEmprestado);
-            relatorio.add(tabelaEmprestimos);
+            relatorio.add(new LineSeparator());
+            relatorio.add(new Paragraph("\n"));
+
+            // Calcula saldo acumulado nos envelopes de Reserva de Emergência e Investimentos
+            double saldoAcumuladoReserva = calcularSaldoAcumuladoEnvelope(planejamento,
+                    EnvelopeDefaultEnum.RESERVA_EMERGENCIA.getDescricao());
+            double saldoAcumuladoInvestimentos = calcularSaldoAcumuladoEnvelope(planejamento,
+                    EnvelopeDefaultEnum.INVESTIMENTOS.getDescricao());
+
+            // Adiciona acumulado nos envelopes de Reserva de Emergência e Investimentos
+            relatorio.add(new Paragraph("Saldo acumulado nos envelopes de reserva de emergência: "
+                    + FORMATO_QUANTIA.format(saldoAcumuladoReserva)));
+            relatorio.add(new Paragraph("Saldo acumulado nos envelopes de investimentos: "
+                    + FORMATO_QUANTIA.format(saldoAcumuladoInvestimentos)));
+            relatorio.add(new Paragraph("\n"));
         } catch (DocumentException e) {
             e.printStackTrace();
         }
