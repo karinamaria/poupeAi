@@ -1,6 +1,7 @@
 package br.com.poupeAi.mother;
 
 import br.com.poupeAi.model.Usuario;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * UsuarioMother é uma classe object mother
@@ -12,6 +13,7 @@ public class UsuarioMother {
         return Usuario.builder()
                 .nome("Beatriz")
                 .email("beatriz@email.com")
+                .senha("senha/beatriz")
                 .build();
     }
 
@@ -19,8 +21,17 @@ public class UsuarioMother {
         return Usuario.builder()
                 .id(1L)
                 .nome("Beatriz")
-                .senha("beatriz@email.com")
                 .email("beatriz@email.com")
+                .senha(new BCryptPasswordEncoder().encode("senha/beatriz"))
+                .build();
+    }
+
+    public static Usuario getAnEditedUsuario(){
+        return Usuario.builder()
+                .id(1L)
+                .nome("Beatriz Teste")
+                .email("beatriz.teste@email.com")
+                .senha(new BCryptPasswordEncoder().encode("senha/beatriz.teste"))
                 .build();
     }
 
@@ -28,7 +39,8 @@ public class UsuarioMother {
         return Usuario.builder()
                 .id(2L)
                 .nome("Eva")
-                .senha("eva@email.com")
+                .email("eva@email.com")
+                .senha(new BCryptPasswordEncoder().encode("senha/eva"))
                 .build();
     }
 }
