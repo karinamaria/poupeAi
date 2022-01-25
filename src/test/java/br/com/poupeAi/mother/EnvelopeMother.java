@@ -42,4 +42,31 @@ public class EnvelopeMother {
                 .despesas(new HashSet<>(Collections.singleton(getExistingDespesa())))
                 .build();
     }
+
+    public static Envelope createAnExistingEnvelopeWithNoDepesas(){
+        return Envelope.builder()
+                .id(1L)
+                .nome("Teste 1")
+                .orcamento(1000)
+                .despesas(new HashSet<>())
+                .build();
+    }
+
+    public static Envelope createAnExistingEnvelopeWithNoBalance(){
+        return Envelope.builder()
+                .id(1L)
+                .nome("Teste 1")
+                .orcamento(0)
+                .despesas(new HashSet<>())
+                .build();
+    }
+
+    public static Envelope getAnOtherEnvelope(){
+        return Envelope.builder()
+                .id(2L)
+                .nome("Teste 2")
+                .orcamento(700)
+                .despesas(new HashSet<>())
+                .build();
+    }
 }
